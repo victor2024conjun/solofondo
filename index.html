@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario en Vivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .question-container {
+            margin-top: 20px;
+        }
+
+        .option {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .option button {
+            width: 45%;
+            padding: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .yes {
+            background-color: green;
+            color: white;
+        }
+
+        .no {
+            background-color: red;
+            color: white;
+        }
+
+        .results {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="container" id="login-container">
+    <h2>Iniciar Sesión</h2>
+    <input type="email" id="email" placeholder="Correo electrónico">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="login()">Ingresar</button>
+    <p id="login-error" style="color: red;"></p>
+</div>
+
+<!-- Pantalla de Cuestionario (Admin) -->
+<div class="container" id="admin-container" style="display: none;">
+    <h2>Agregar Pregunta</h2>
+    <input type="text" id="question-input" placeholder="Escribe la pregunta">
+    <button onclick="addQuestion()">Agregar Pregunta</button>
+    <button onclick="finalizeVoting()">Finalizar Votación</button>
+
+    <div class="question-container" id="questions-container"></div>
+    <div class="results" id="results-container"></div>
+</div>
+
+<!-- Pantalla de Votación (Usuarios) -->
+<div class="container" id="user-container" style="display: none;">
+    <h2>Cuestionario</h2>
+    <div class="question-container" id="user-questions-container"></div>
+</div>
+
+<script>
+    // Variables de almacenamiento de preguntas y votos
+    let questions = [];
+    let votes = {};
+
+    // Función de Login
+    function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (email === 'v@gmail.com' && password === '12') {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('admin-container').style.display = 'block';
+        } else if (email === 'x@gmail.com' && password === '09') {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('user-container').style.display = 'block';
+            renderQuestionsForUsers();
+        } else {
+            document.getElementById('login-error').innerText = 'Correo o contraseña incorrectos';
+        }
+    }
+
+    // Función para agregar una nueva pregunta
+    function addQuestion() {
+        const questionInput = document.getElementById('question-input').value;
+        if (questionInput.trim() !== '') {
+            const questionId = `q${questions.length}`;
+            questions.push({ id: questionId, text: questionInput });
+            votes[questionId] = { yes: 0, no: 0 };
+            renderQuestionsForAdmin();
+            document.getElementById('question-input').value = ''; // Limpiar campo
+        } else {
+            alert('Por favor ingresa una pregunta.');
+        }
+    }
+
+    // Renderizar preguntas para el administrador
+    function renderQuestionsForAdmin() {
+        const container = document.getElementById('questions-container');
+        container.innerHTML = ''; // Limpiar contenido
+
+        questions.forEach(question => {
+            const div = document.createElement('div');
+            div.innerHTML = `<p>${question.text}</p>`;
+            container.appendChild(div);
+        });
+    }
+
+    // Renderizar preguntas para los usuarios
+    function renderQuestionsForUsers() {
+        const container = document.getElementById('user-questions-container');
+        container.innerHTML = ''; // Limpiar contenido
+
+        questions.forEach(question => {
+            const div = document.createElement('div');
+            div.className = 'option';
+            div.innerHTML = `
+                <p>${question.text}</p>
+                <button class="yes" onclick="vote('${question.id}', 'yes')">Sí</button>
+                <button class="no" onclick="vote('${question.id}', 'no')">No</button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // Función para votar
+    function vote(questionId, option) {
+        if (votes[questionId]) {
+            votes[questionId][option]++;
+            alert('Voto registrado. Gracias por participar.');
+        }
+    }
+
+    // Finalizar la votación y mostrar los resultados
+    function finalizeVoting() {
+        const resultsContainer = document.getElementById('results-container');
+        resultsContainer.innerHTML = '<h3>Resultados</h3>';
+        questions.forEach(question => {
+            const result = votes[question.id];
+            resultsContainer.innerHTML += `
+                <p>${question.text} - Sí: ${result.yes}, No: ${result.no}</p>
+            `;
+        });
+        resultsContainer.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

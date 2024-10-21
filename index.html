@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flora Meet Portal</title>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.32/build/spline-viewer.js"></script>
+  <style>
+    /* Estilo general del body y Spline como fondo */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    spline-viewer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* Contenedor translúcido con efecto 3D */
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.7);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      width: 300px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Animación de flotación suave */
+    @keyframes float {
+      0%, 100% {
+        transform: translate(-50%, -50%) translateY(0px);
+      }
+      50% {
+        transform: translate(-50%, -50%) translateY(-10px);
+      }
+    }
+
+    /* Mensaje principal */
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #333;
+    }
+
+    /* Texto del enlace */
+    .small-text {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #007bff;
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Flecha dinámica */
+    .small-text::after {
+      content: '↓';
+      position: absolute;
+      right: -15px;
+      top: 0;
+      font-size: 18px;
+      animation: bounce 1s infinite;
+    }
+
+    /* Animación de rebote */
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fondo Spline -->
+  <spline-viewer url="https://prod.spline.design/FElXTjeaYk9nty5P/scene.splinecode"></spline-viewer>
+
+  <!-- Contenedor con mensaje 3D -->
+  <div class="container">
+    <h1>Bienvenidos al Portal de Flora Meet</h1>
+    <div class="small-text" onclick="openInNewTab()">click aquí</div>
+  </div>
+
+  <script>
+    // Función para abrir el enlace en una nueva ventana
+    function openInNewTab() {
+      window.open('https://victor2024conjun.github.io/FLORA/', '_blank');
+    }
+  </script>
+
+</body>
+</html>
